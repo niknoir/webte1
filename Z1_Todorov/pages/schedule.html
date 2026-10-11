@@ -4,19 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mykola Todorov — Rozvrh</title>
-  <meta name="description" content="Týždenný rozvrh hodín Mykolu Todorova — FEI STU, semester 2024/2025.">
-  <!-- Open Graph -->
+  <meta name="description" content="Týždenný rozvrh hodín Mykolu Todorova — FEI STU, semester 2026/2027.">
   <meta property="og:title" content="Mykola Todorov — Rozvrh">
   <meta property="og:description" content="Kedy mám prednášky, cvičenia a voľný čas.">
   <meta property="og:image" content="../img/me.jpg">
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-  <!-- Styles -->
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    /* --- Schedule page styles --- */
-
-    /* Filter buttons row */
     .schedule-filters {
       display: flex;
       gap: var(--space-sm);
@@ -25,11 +19,6 @@
       align-items: center;
     }
 
-    .schedule-filters .btn {
-      min-width: 100px;
-    }
-
-    /* Current status message */
     .schedule-status {
       background-color: var(--color-surface);
       border-left: 4px solid var(--color-brand-alt);
@@ -39,19 +28,17 @@
       font-size: var(--font-size-sm);
     }
 
-    /* Table wrapper for horizontal scroll on mobile */
     .schedule-scroll {
       overflow-x: auto;
       border-radius: var(--radius);
       margin-bottom: var(--space-md);
     }
 
-    /* Schedule table */
     .schedule-table {
       width: 100%;
-      min-width: 700px;
+      min-width: 750px;
       border-collapse: collapse;
-      font-size: var(--font-size-sm);
+      font-size: 0.82rem;
       background-color: var(--color-surface-alt);
       border-radius: var(--radius);
       overflow: hidden;
@@ -59,73 +46,73 @@
 
     .schedule-table th,
     .schedule-table td {
-      padding: 6px 8px;
+      padding: 7px 9px;
       text-align: center;
-      border: 1px solid rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.09);
       vertical-align: middle;
     }
 
-    /* Header row */
+    /* Day header column */
+    .schedule-table .col-day {
+      background-color: var(--color-brand);
+      color: #fff;
+      font-weight: 700;
+      width: 55px;
+      white-space: nowrap;
+    }
+
+    /* Time header row */
     .schedule-table thead th {
       background-color: var(--color-brand);
       color: #fff;
       font-weight: 600;
-    }
-
-    /* Time column */
-    .schedule-table .col-time {
-      background-color: var(--color-brand-alt);
-      color: #fff;
-      font-weight: 600;
       white-space: nowrap;
-      width: 70px;
     }
 
-    /* Zebra striping */
+    /* Zebra striping on rows */
     .schedule-table tbody tr:nth-of-type(even) {
-      background-color: rgba(220,232,212,0.5);
+      background-color: rgba(220,232,212,0.45);
     }
 
-    /* Cell types */
+    /* Lecture */
     .schedule-table td[data-type="lecture"] {
       background-color: #b7d4b0;
       font-weight: 500;
+      color: #1a3a1a;
     }
 
+    /* Exercise */
     .schedule-table td[data-type="exercise"] {
       background-color: #d4e8c8;
       font-weight: 500;
+      color: #1a3a1a;
     }
 
+    /* Sport */
     .schedule-table td[data-type="sport"] {
       background-color: #e8d4b0;
       font-weight: 500;
+      color: #3a2a0a;
     }
 
+    /* Free */
     .schedule-table td[data-type="free"] {
-      color: #999;
-      font-size: 0.75rem;
+      color: #aaa;
+      font-size: 0.72rem;
     }
 
-    /* Active / current cell highlight */
+    /* Current cell highlight */
     .schedule-table td.cell--current {
       outline: 3px solid var(--color-brand);
       outline-offset: -3px;
       font-weight: 700;
-      animation: pulse-cell 1.5s ease-in-out infinite;
     }
 
-    @keyframes pulse-cell {
-      0%, 100% { background-color: #8fbc8f; }
-      50%       { background-color: #6aab6a; }
-    }
-
-    /* Filter hidden state */
+    /* Filter hidden */
     .schedule-table td.cell--hidden {
       visibility: hidden;
     }
 
-    /* No results message */
     .no-results {
       display: none;
       text-align: center;
@@ -133,22 +120,24 @@
       color: var(--color-text-muted);
       font-style: italic;
     }
+    .no-results.visible { display: block; }
 
-    .no-results.visible {
+    /* Subject code small text */
+    .cell-code {
       display: block;
+      font-size: 0.68rem;
+      color: rgba(0,0,0,0.45);
+      margin-top: 2px;
     }
 
-    /* Progress bar */
-    .semester-progress {
-      margin-top: var(--space-md);
-    }
+    /* Semester progress */
+    .semester-progress { margin-top: var(--space-md); }
 
     .progress-bar-wrapper {
       background-color: rgba(0,0,0,0.1);
       border-radius: 99px;
       height: 20px;
       overflow: hidden;
-      position: relative;
     }
 
     .progress-bar-fill {
@@ -166,9 +155,8 @@
     }
 
     @media (max-width: 600px) {
-      .schedule-table {
-        font-size: 0.72rem;
-      }
+      .schedule-table { font-size: 0.68rem; }
+      .schedule-table th, .schedule-table td { padding: 4px 5px; }
     }
   </style>
 </head>
@@ -202,42 +190,211 @@
     <div class="container">
       <h1>Kedy ma zastihnete</h1>
 
-      <!-- Current class status -->
       <div class="schedule-status" id="schedule-status" aria-live="polite">
         <span id="status-text">Načítavam aktuálny stav...</span>
       </div>
 
-      <!-- Filter buttons -->
       <div class="schedule-filters" role="group" aria-label="Filter rozvrhu">
-        <button class="btn btn--active active" id="filter-all"      data-filter="all"      aria-pressed="true">Všetko</button>
-        <button class="btn"                    id="filter-lecture"  data-filter="lecture"  aria-pressed="false">Prednášky</button>
-        <button class="btn"                    id="filter-exercise" data-filter="exercise" aria-pressed="false">Cvičenia</button>
+        <button class="btn btn--active active" data-filter="all"      aria-pressed="true">Všetko</button>
+        <button class="btn"                    data-filter="lecture"  aria-pressed="false">Prednášky</button>
+        <button class="btn"                    data-filter="exercise" aria-pressed="false">Cvičenia</button>
       </div>
 
-      <!-- Schedule table (7:00 – 21:00, Monday–Friday) -->
       <div class="schedule-scroll" role="region" aria-label="Tabuľka rozvrhu">
         <table class="schedule-table" id="schedule-table">
-          <caption class="visually-hidden">Týždenný rozvrh hodín, 7:00 – 21:00</caption>
+          <caption class="visually-hidden">Týždenný rozvrh hodín, 8:00 – 18:00</caption>
           <thead>
             <tr>
-              <th scope="col">Čas</th>
-              <th scope="col">Pondelok</th>
-              <th scope="col">Utorok</th>
-              <th scope="col">Streda</th>
-              <th scope="col">Štvrtok</th>
-              <th scope="col">Piatok</th>
+              <th scope="col">Deň</th>
+              <th scope="col">8:00–9:00</th>
+              <th scope="col">9:00–10:00</th>
+              <th scope="col">10:00–11:00</th>
+              <th scope="col">11:00–12:00</th>
+              <th scope="col">12:00–13:00</th>
+              <th scope="col">13:00–14:00</th>
+              <th scope="col">14:00–15:00</th>
+              <th scope="col">15:00–16:00</th>
+              <th scope="col">16:00–17:00</th>
+              <th scope="col">17:00–18:00</th>
             </tr>
           </thead>
-          <tbody id="schedule-body">
-            <!-- Rows inserted by JavaScript -->
+          <tbody>
+            <!--
+              Time slots index (0-based):
+              0 = 8:00  1 = 9:00  2 = 10:00  3 = 11:00  4 = 12:00
+              5 = 13:00  6 = 14:00  7 = 15:00  8 = 16:00  9 = 17:00
+
+              Schedule (from Harmonogram.png + user corrections):
+
+              MONDAY (Pondelok):
+                8:00  — TV Physical Exercises (prednáška / sport) 9:00–9:50
+                9:00  — Web technologies 1 exercise (cvičenie)  9:00–9:50  ← removed, WEBTE exercise moved to 11:00
+                9:00  — Physical Exercises lecture               9:00–9:50  (sport - TV)
+                11:00 — Web technologies 1 (cvičenie) ← USER moved here
+                13:00 — cpu-a Operating Systems (prednáška)  13:00–13:50
+                15:00 — Linear Algebra 2 (prednáška)         15:00–15:50
+
+              TUESDAY (Utorok):
+                8:00  — Analysis and complexity of algorithms (prednáška) de300
+                10:00 — Web technologies 1 (prednáška)  cd150
+                15:00 — Software engineering (prednáška) cd300  ← keep
+                [15:00 Physical Exercises REMOVED by user]
+                17:00 — Software engineering (prednáška) cd300  ← second parallel group
+
+              WEDNESDAY (Streda):
+                8:00  — Operating Systems (prednáška) cd300
+                10:00 — Analysis and complexity of algorithms (cvičenie) bc150
+                13:00 — Web technologies 1 (cvičenie) cd150
+                15:00 — Linear Algebra 2 (cvičenie) c329 ← KEEP (user: "only this LA2 practice")
+
+              THURSDAY (Štvrtok):
+                8:00  — Intro to Programming Quantum Computers (prednáška)  -1.40
+                12:00 — Intro to Programming Quantum Computers (prednáška)  -1.40
+                [12:00 SWI cvičenie REMOVED by user]
+
+              FRIDAY (Piatok): VOĽNO (all free) ← user request
+            -->
+
+            <!-- MONDAY -->
+            <tr>
+              <th class="col-day" scope="row">Pon</th>
+              <!-- 8:00 sport TV - prednáška -->
+              <td data-type="sport" data-day="0" data-slot="0">
+                Telesná výchova
+                <span class="cell-code">tv BA-FEI</span>
+              </td>
+              <!-- 9:00 free -->
+              <td data-type="free" data-day="0" data-slot="1">—</td>
+              <!-- 10:00 free -->
+              <td data-type="free" data-day="0" data-slot="2">—</td>
+              <!-- 11:00 WEBTE exercise (user moved here) -->
+              <td data-type="exercise" data-day="0" data-slot="3">
+                Web technologies 1
+                <span class="cell-code">c137 cvičenie</span>
+              </td>
+              <!-- 12:00 free -->
+              <td data-type="free" data-day="0" data-slot="4">—</td>
+              <!-- 13:00 OS lecture -->
+              <td data-type="lecture" data-day="0" data-slot="5">
+                Operating Systems
+                <span class="cell-code">cpu-a prednáška</span>
+              </td>
+              <!-- 14:00 free -->
+              <td data-type="free" data-day="0" data-slot="6">—</td>
+              <!-- 15:00 LA2 lecture -->
+              <td data-type="lecture" data-day="0" data-slot="7">
+                Linear Algebra 2
+                <span class="cell-code">cd300 prednáška</span>
+              </td>
+              <!-- 16:00 free -->
+              <td data-type="free" data-day="0" data-slot="8">—</td>
+              <!-- 17:00 free -->
+              <td data-type="free" data-day="0" data-slot="9">—</td>
+            </tr>
+
+            <!-- TUESDAY -->
+            <tr>
+              <th class="col-day" scope="row">Uto</th>
+              <!-- 8:00 ACA lecture -->
+              <td data-type="lecture" data-day="1" data-slot="0" colspan="2">
+                Analysis &amp; Complexity of Algorithms
+                <span class="cell-code">de300 prednáška</span>
+              </td>
+              <!-- 10:00 WEBTE lecture -->
+              <td data-type="lecture" data-day="1" data-slot="2" colspan="2">
+                Web Technologies 1
+                <span class="cell-code">cd150 prednáška</span>
+              </td>
+              <!-- 12:00 free -->
+              <td data-type="free" data-day="1" data-slot="4">—</td>
+              <!-- 13:00 free -->
+              <td data-type="free" data-day="1" data-slot="5">—</td>
+              <!-- 14:00 free -->
+              <td data-type="free" data-day="1" data-slot="6">—</td>
+              <!-- 15:00 Software engineering lecture -->
+              <td data-type="lecture" data-day="1" data-slot="7">
+                Software Engineering
+                <span class="cell-code">cd300 prednáška</span>
+              </td>
+              <!-- 16:00 free -->
+              <td data-type="free" data-day="1" data-slot="8">—</td>
+              <!-- 17:00 SWE lecture (parallel) -->
+              <td data-type="lecture" data-day="1" data-slot="9">
+                Software Engineering
+                <span class="cell-code">cd300 prednáška</span>
+              </td>
+            </tr>
+
+            <!-- WEDNESDAY -->
+            <tr>
+              <th class="col-day" scope="row">Str</th>
+              <!-- 8:00 OS lecture -->
+              <td data-type="lecture" data-day="2" data-slot="0" colspan="2">
+                Operating Systems
+                <span class="cell-code">cd300 prednáška</span>
+              </td>
+              <!-- 10:00 ACA exercise -->
+              <td data-type="exercise" data-day="2" data-slot="2" colspan="2">
+                Analysis &amp; Complexity of Algorithms
+                <span class="cell-code">bc150 cvičenie</span>
+              </td>
+              <!-- 12:00 free -->
+              <td data-type="free" data-day="2" data-slot="4">—</td>
+              <!-- 13:00 WEBTE exercise -->
+              <td data-type="exercise" data-day="2" data-slot="5" colspan="2">
+                Web Technologies 1
+                <span class="cell-code">cd150 cvičenie</span>
+              </td>
+              <!-- 15:00 LA2 exercise ← user: keep only this one -->
+              <td data-type="exercise" data-day="2" data-slot="7" colspan="2">
+                Linear Algebra 2
+                <span class="cell-code">c329 cvičenie</span>
+              </td>
+              <!-- 17:00 free -->
+              <td data-type="free" data-day="2" data-slot="9">—</td>
+            </tr>
+
+            <!-- THURSDAY -->
+            <tr>
+              <th class="col-day" scope="row">Štvr</th>
+              <!-- 8:00 IPC lecture colspan=2 -->
+              <td data-type="lecture" data-day="3" data-slot="0" colspan="2">
+                Intro to Programming Quantum Computers
+                <span class="cell-code">-1.40 prednáška</span>
+              </td>
+              <!-- 10:00 free -->
+              <td data-type="free" data-day="3" data-slot="2">—</td>
+              <!-- 11:00 free -->
+              <td data-type="free" data-day="3" data-slot="3">—</td>
+              <!-- 12:00 IPC lecture (second time) -->
+              <td data-type="lecture" data-day="3" data-slot="4" colspan="2">
+                Intro to Programming Quantum Computers
+                <span class="cell-code">-1.40 prednáška</span>
+              </td>
+              <!-- 14:00 free -->
+              <td data-type="free" data-day="3" data-slot="6">—</td>
+              <!-- 15:00 free -->
+              <td data-type="free" data-day="3" data-slot="7">—</td>
+              <!-- 16:00 free -->
+              <td data-type="free" data-day="3" data-slot="8">—</td>
+              <!-- 17:00 free -->
+              <td data-type="free" data-day="3" data-slot="9">—</td>
+            </tr>
+
+            <!-- FRIDAY — VOĽNO (user request) -->
+            <tr>
+              <th class="col-day" scope="row">Pia</th>
+              <td data-type="free" data-day="4" colspan="10" style="color:var(--color-brand-alt); font-weight:600;">
+                🗓️ Voľný deň
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- No results -->
       <p class="no-results" id="no-results" role="alert">Pre vybraný filter nie sú žiadne hodiny v rozvrhu.</p>
 
-      <!-- Semester progress bar -->
+      <!-- Semester progress -->
       <section class="semester-progress card" aria-label="Postup semestra">
         <h2>Postup semestra</h2>
         <div class="progress-label">
@@ -245,7 +402,8 @@
           <span id="progress-percent">0%</span>
           <span>Koniec: 19.12.2026</span>
         </div>
-        <div class="progress-bar-wrapper" role="progressbar" id="progress-bar-wrapper"
+        <div class="progress-bar-wrapper"
+             role="progressbar" id="progress-bar-wrapper"
              aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
              aria-label="Postup semestra">
           <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
@@ -270,184 +428,116 @@
   <script src="../js/script.js"></script>
   <script>
     /**
-     * schedule.js — timetable logic
-     * Highlights current lesson, filter buttons, semester progress bar
+     * schedule.js
+     * - Highlights current lesson cell
+     * - Filter buttons (All / Lectures / Exercises)
+     * - Semester progress bar
      */
 
     // === Semester constants ===
     const SEMESTER_START = new Date("2026-09-22T00:00:00");
     const SEMESTER_END   = new Date("2026-12-19T23:59:59");
 
-    // === Schedule data structure ===
-    // times: array of hour strings "HH:MM"
-    // days: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri (index from Monday)
-    // colspan: how many rows (1hr slots) to span
-    const SLOTS = [
-      "07:00","08:00","09:00","10:00","11:00","12:00",
-      "13:00","14:00","15:00","16:00","17:00","18:00",
-      "19:00","20:00"
-    ];
-
-    // Schedule: [dayIndex (0-4), startSlotIndex (0-13), rowspan, type, subject]
-    // dayIndex: 0=Mon,1=Tue,2=Wed,3=Thu,4=Fri
-    // type: "lecture" | "exercise" | "sport" | "free"
-    const SCHEDULE_DATA = [
+    // === Schedule data (for "current lesson" detection) ===
+    // day: 0=Mon,1=Tue,2=Wed,3=Thu,4=Fri
+    // startHour: integer hour when lesson begins (8,9,10...)
+    // duration: hours
+    const LESSONS = [
       // Monday
-      { day: 0, start: 2, span: 2, type: "lecture",  subject: "Webové technológie (prednáška)" },
-      { day: 0, start: 5, span: 2, type: "exercise", subject: "Algoritmy a DS (cvičenie)" },
+      { day:0, startHour:8,  duration:1, type:"sport",    subject:"Telesná výchova" },
+      { day:0, startHour:11, duration:1, type:"exercise", subject:"Web Technologies 1 (cvičenie)" },
+      { day:0, startHour:13, duration:1, type:"lecture",  subject:"Operating Systems (prednáška)" },
+      { day:0, startHour:15, duration:1, type:"lecture",  subject:"Linear Algebra 2 (prednáška)" },
       // Tuesday
-      { day: 1, start: 1, span: 2, type: "lecture",  subject: "Algoritmy a DS (prednáška)" },
-      { day: 1, start: 4, span: 2, type: "exercise", subject: "Operačné systémy (cvičenie)" },
-      { day: 1, start: 8, span: 1, type: "sport",    subject: "Telesná výchova" },
+      { day:1, startHour:8,  duration:2, type:"lecture",  subject:"Analysis & Complexity of Algorithms" },
+      { day:1, startHour:10, duration:2, type:"lecture",  subject:"Web Technologies 1 (prednáška)" },
+      { day:1, startHour:15, duration:1, type:"lecture",  subject:"Software Engineering (prednáška)" },
+      { day:1, startHour:17, duration:1, type:"lecture",  subject:"Software Engineering (prednáška)" },
       // Wednesday
-      { day: 2, start: 2, span: 2, type: "lecture",  subject: "Operačné systémy (prednáška)" },
-      { day: 2, start: 6, span: 2, type: "exercise", subject: "Webové technológie (cvičenie)" },
+      { day:2, startHour:8,  duration:2, type:"lecture",  subject:"Operating Systems (prednáška)" },
+      { day:2, startHour:10, duration:2, type:"exercise", subject:"Analysis & Complexity of Algorithms (cvičenie)" },
+      { day:2, startHour:13, duration:2, type:"exercise", subject:"Web Technologies 1 (cvičenie)" },
+      { day:2, startHour:15, duration:2, type:"exercise", subject:"Linear Algebra 2 (cvičenie)" },
       // Thursday
-      { day: 3, start: 0, span: 2, type: "lecture",  subject: "Matematická analýza (prednáška)" },
-      { day: 3, start: 5, span: 2, type: "exercise", subject: "Matematická analýza (cvičenie)" },
-      // Friday
-      { day: 4, start: 1, span: 2, type: "lecture",  subject: "Webové technológie (prednáška)" },
-      { day: 4, start: 4, span: 1, type: "exercise", subject: "Algoritmy a DS (cvičenie)" },
+      { day:3, startHour:8,  duration:2, type:"lecture",  subject:"Intro to Programming Quantum Computers" },
+      { day:3, startHour:12, duration:2, type:"lecture",  subject:"Intro to Programming Quantum Computers" },
     ];
 
-    // Build grid: grid[slotIdx][dayIdx] = {type, subject, span, skip}
-    function buildGrid() {
-      const grid = [];
-      for (let s = 0; s < SLOTS.length; s++) {
-        grid[s] = [];
-        for (let d = 0; d < 5; d++) {
-          grid[s][d] = { type: "free", subject: "—", span: 1, skip: false };
-        }
-      }
+    const DAY_NAMES = ["pondelok","utorok","stredu","štvrtok","piatok"];
 
-      SCHEDULE_DATA.forEach(entry => {
-        grid[entry.start][entry.day] = { type: entry.type, subject: entry.subject, span: entry.span, skip: false };
-        // Mark rows below as skip
-        for (let i = 1; i < entry.span; i++) {
-          if (entry.start + i < SLOTS.length) {
-            grid[entry.start + i][entry.day].skip = true;
-          }
-        }
-      });
-
-      return grid;
-    }
-
-    function renderTable(grid) {
-      const tbody = document.getElementById("schedule-body");
-      tbody.innerHTML = "";
-
-      for (let s = 0; s < SLOTS.length; s++) {
-        const tr = document.createElement("tr");
-        tr.setAttribute("data-slot", s);
-
-        // Time cell
-        const timeTd = document.createElement("th");
-        timeTd.className = "col-time";
-        timeTd.scope = "row";
-        timeTd.textContent = SLOTS[s];
-        tr.appendChild(timeTd);
-
-        for (let d = 0; d < 5; d++) {
-          const cell = grid[s][d];
-          if (cell.skip) continue;
-
-          const td = document.createElement("td");
-          td.setAttribute("data-type", cell.type);
-          td.setAttribute("data-day", d);
-          td.setAttribute("data-slot", s);
-          td.textContent = cell.subject;
-
-          if (cell.span > 1) {
-            td.rowSpan = cell.span;
-          }
-
-          tr.appendChild(td);
-        }
-
-        tbody.appendChild(tr);
-      }
-    }
-
-    // Highlight current lesson
     function highlightCurrentLesson() {
       const now = new Date();
-      const dayOfWeek = now.getDay(); // 0=Sun,1=Mon...6=Sat
-      const dayIdx = dayOfWeek - 1;  // 0=Mon...4=Fri, -1=Sun, 5=Sat
-
+      const jsDay = now.getDay(); // 0=Sun,1=Mon..5=Fri,6=Sat
+      const dayIdx = jsDay - 1;  // 0=Mon..4=Fri
+      const currentHour = now.getHours();
       const statusEl = document.getElementById("status-text");
-      const cells = document.querySelectorAll(".schedule-table td");
-      cells.forEach(c => c.classList.remove("cell--current"));
 
-      const hour = now.getHours();
-      const slotIdx = hour - 7; // 7:00=0, 8:00=1, ...
+      // Remove previous highlight
+      document.querySelectorAll(".schedule-table td.cell--current")
+        .forEach(c => c.classList.remove("cell--current"));
 
-      if (dayIdx < 0 || dayIdx > 4 || slotIdx < 0 || slotIdx >= SLOTS.length) {
-        // Weekend or outside hours
-        const nextInfo = findNextLesson(now, dayIdx, slotIdx);
-        statusEl.textContent = nextInfo;
+      if (dayIdx < 0 || dayIdx > 4) {
+        statusEl.textContent = findNextLesson(now, -1, currentHour);
         return;
       }
 
-      // Find if any lesson is ongoing
-      let foundLesson = null;
-      SCHEDULE_DATA.forEach(entry => {
-        if (entry.day === dayIdx && slotIdx >= entry.start && slotIdx < entry.start + entry.span) {
-          foundLesson = entry;
-        }
-      });
+      const active = LESSONS.find(l =>
+        l.day === dayIdx &&
+        currentHour >= l.startHour &&
+        currentHour < l.startHour + l.duration
+      );
 
-      if (foundLesson) {
-        // Highlight all cells of this lesson
-        const allTds = document.querySelectorAll(`td[data-day="${dayIdx}"][data-slot="${foundLesson.start}"]`);
-        allTds.forEach(td => td.classList.add("cell--current"));
-        statusEl.textContent = `📚 Teraz prebieha: ${foundLesson.subject}`;
+      if (active) {
+        // Find and highlight the table cell
+        const slotIdx = active.startHour - 8;
+        const cells = document.querySelectorAll(
+          `td[data-day="${dayIdx}"][data-slot="${slotIdx}"]`
+        );
+        cells.forEach(c => c.classList.add("cell--current"));
+        statusEl.textContent = `📚 Teraz prebieha: ${active.subject}`;
       } else {
-        const nextInfo = findNextLesson(now, dayIdx, slotIdx);
-        statusEl.textContent = nextInfo;
+        statusEl.textContent = findNextLesson(now, dayIdx, currentHour);
       }
     }
 
-    function findNextLesson(now, currentDay, currentSlot) {
-      const days = ["pondelok", "utorok", "streda", "štvrtok", "piatok"];
+    function findNextLesson(now, currentDay, currentHour) {
       let earliest = null;
 
-      SCHEDULE_DATA.forEach(entry => {
-        // Calculate minutes from now
-        let diffDays = entry.day - currentDay;
-        if (diffDays < 0 || (diffDays === 0 && entry.start <= currentSlot)) {
-          diffDays += 5; // wrap to next week
+      LESSONS.forEach(lesson => {
+        let diffDays = lesson.day - currentDay;
+        if (
+          diffDays < 0 ||
+          (diffDays === 0 && lesson.startHour <= currentHour)
+        ) {
+          diffDays += 5;
         }
-        const totalMins = diffDays * 24 * 60 + (entry.start + 7) * 60 - (now.getHours() * 60 + now.getMinutes());
+        const totalMins =
+          diffDays * 24 * 60 +
+          lesson.startHour * 60 -
+          (now.getHours() * 60 + now.getMinutes());
 
         if (!earliest || totalMins < earliest.totalMins) {
-          earliest = { totalMins, entry };
+          earliest = { totalMins, lesson };
         }
       });
 
       if (!earliest) return "Momentálne nie je žiadna hodina v rozvrhu.";
-
-      const { entry } = earliest;
-      const dayName = days[entry.day];
-      const time = SLOTS[entry.start];
-      return `📭 Momentálne neprebieha výučba. Najbližšia hodina: ${entry.subject} — ${dayName} o ${time}`;
+      const l = earliest.lesson;
+      return `📭 Výučba práve neprebieha. Najbližšia hodina: ${l.subject} — ${DAY_NAMES[l.day]} o ${l.startHour}:00`;
     }
 
-    // Filter buttons
+    // === Filter buttons ===
     function initFilters() {
       const buttons = document.querySelectorAll(".schedule-filters .btn");
       buttons.forEach(btn => {
         btn.addEventListener("click", () => {
           const filter = btn.getAttribute("data-filter");
-
-          // Update button states
           buttons.forEach(b => {
             b.classList.remove("btn--active", "active");
             b.setAttribute("aria-pressed", "false");
           });
           btn.classList.add("btn--active", "active");
           btn.setAttribute("aria-pressed", "true");
-
           applyFilter(filter);
         });
       });
@@ -468,7 +558,6 @@
         }
       });
 
-      // If filtering non-"all" and no real lessons visible
       if (filter !== "all" && visibleCount === 0) {
         noResults.classList.add("visible");
       } else {
@@ -476,30 +565,25 @@
       }
     }
 
-    // Semester progress bar
-    function updateProgressBar() {
-      const now = Date.now();
+    // === Semester progress ===
+    function updateProgress() {
+      const now   = Date.now();
       const start = SEMESTER_START.getTime();
       const end   = SEMESTER_END.getTime();
-
       let pct = 0;
       if (now <= start) pct = 0;
       else if (now >= end) pct = 100;
       else pct = Math.round(((now - start) / (end - start)) * 100);
 
       document.getElementById("progress-bar-fill").style.width = pct + "%";
-      document.getElementById("progress-percent").textContent = pct + "%";
+      document.getElementById("progress-percent").textContent  = pct + "%";
       document.getElementById("progress-bar-wrapper").setAttribute("aria-valuenow", pct);
     }
 
-    // Init
-    (function init() {
-      const grid = buildGrid();
-      renderTable(grid);
-      highlightCurrentLesson();
-      initFilters();
-      updateProgressBar();
-    })();
+    // === Init ===
+    highlightCurrentLesson();
+    initFilters();
+    updateProgress();
   </script>
 </body>
 </html>

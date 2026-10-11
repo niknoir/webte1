@@ -4,7 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Weather API a Leaflet | Mykola Todorov</title>
+  <title>Mykola Todorov — Kde ma nájdete</title>
+  <meta name="description"
+    content="Interaktívna mapa — kde bývam v ŠD Mladosť, kde študujem na FEI STU a výpočet vzdialeností.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mykola Todorov — Kde ma nájdete">
+  <meta property="og:description"
+    content="Interaktívna mapa s trasou a vlastnými bodmi vypočítanými Haversinovým vzorcom.">
+  <meta property="og:image" content="../img/me.jpg">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -13,7 +21,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 
-  <!-- Styles -->
+  <!-- Shared Stylesheet -->
   <link rel="stylesheet" href="../css/styles.css">
 
   <style>
@@ -135,6 +143,15 @@
       display: block;
     }
 
+    .instruction {
+      background-color: var(--color-surface-alt);
+      border-left: 4px solid var(--color-brand-alt);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: var(--space-sm) var(--space);
+      margin-bottom: var(--space);
+      font-size: var(--font-size-sm);
+    }
+
     @media (max-width: 768px) {
       .map-layout {
         grid-template-columns: 1fr;
@@ -155,7 +172,7 @@
       <a class="monogram" href="../index.html" aria-label="Domov — MT monogram">MT</a>
       <div class="header-info">
         <a class="site-title" href="../index.html">Mykola Todorov</a>
-        <p class="site-tagline">Študent informatiky, zaujíma ma webový vývoj a programovanie</p>
+        <p class="site-tagline">Študent aplikovanej informatiky, zaujímajú ma webové technológie</p>
       </div>
     </div>
   </header>
@@ -176,40 +193,46 @@
 
   <main id="main-content">
     <div class="container">
-      <h1>Weather API a Leaflet mapa</h1>
+      <h1>Kde ma nájdete</h1>
+
+      <p class="instruction" id="map-instruction">
+        🗺️ Na mape sú trvalo vyznačené moje miesto štúdia (FEI STU) a bydlisko (ŠD Mladosť). Kliknutím na mapu pridáte
+        nový bod, ktorý môžete pomenovať a vypočítať jeho vzdialenosť.
+      </p>
 
       <div class="map-layout">
         <!-- MAPA -->
         <div>
-          <div id="map" role="application" aria-label="Interaktívna mapa"></div>
+          <div id="map" role="application" aria-label="Interaktívna mapa Bratislavy"></div>
           <p style="font-size:var(--font-size-sm); margin-top:var(--space-sm); color:var(--color-text-muted);">
             Zdroj mapových podkladov: <a href="https://www.openstreetmap.org/copyright" target="_blank"
-              rel="noopener">OpenStreetMap</a> prispievatelia
+              rel="noopener">OpenStreetMap</a> prispievatelia |
+            Knižnica: <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet.js</a>
           </p>
         </div>
 
         <!-- SIDEBAR -->
         <aside class="map-sidebar" aria-label="Správa bodov a počasia">
           <h2>Aktuálne počasie</h2>
-          <div id="weather" class="weather-box">
+          <div id="weather" class="weather-box" aria-live="polite">
             Načítavam počasie...
           </div>
 
           <h2>Pridať bod</h2>
-          <div id="empty-state" class="map-empty-state">
-            👆 Kliknite na mapu pre pridanie bodu
+          <div id="empty-state" class="map-empty-state" aria-live="polite">
+            👆 Kliknite na mapu pre pridanie prvého bodu.
           </div>
 
           <div class="add-point-form" id="add-form" style="display:none;">
             <label for="point-name">Názov bodu:</label>
-            <input type="text" id="point-name" placeholder="Napr. Knižnica..." maxlength="50">
+            <input type="text" id="point-name" placeholder="Napr. Knižnica, Zastávka..." maxlength="50">
             <button class="btn" id="add-point-btn">Pridať bod</button>
             <button class="btn btn--outline" id="cancel-point-btn">Zrušiť</button>
           </div>
 
           <h2>Moje body</h2>
-          <ul class="points-list" id="points-list">
-            <!-- Список точек -->
+          <ul class="points-list" id="points-list" aria-label="Zoznam pridaných bodov">
+            <!-- Vložené cez JS -->
           </ul>
 
           <h2>Vypočítať vzdialenosť</h2>
@@ -236,9 +259,12 @@
       <address>
         <strong>Mykola Todorov</strong>
         <a href="mailto:xtodorovm@stuba.sk">xtodorovm@stuba.sk</a>
+        <a href="tel:+421000000000">+421 XXX XXX XXX</a>
       </address>
       <div class="footer-sources">
         <p>&copy; 2026 Mykola Todorov — FEI STU Bratislava</p>
+        <p>Mapa: <a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet.js</a> | Podklady: <a
+            href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></p>
       </div>
     </div>
   </footer>
@@ -248,6 +274,13 @@
   <script src="../js/script.js"></script>
 
   <script>
+    /**
+     * map.js — Interactive map adhering strictly to assignment guidelines
+     */
+
+    const SCHOOL_COORDS = { lat: 48.151965, lng: 17.072995, name: "FEI STU Bratislava" };
+    const HOME_COORDS = { lat: 48.1588861281, lng: 17.0640099049, name: "ŠD Mladosť (Staré Grunty 53)" };
+
     const map = L.map("map").setView([48.151965, 17.072995], 13);
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -255,11 +288,6 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Фиксированные точки с учетом нового адреса общежития
-    const SCHOOL_COORDS = { lat: 48.151965, lng: 17.072995, name: "FEI STU Bratislava" };
-    const HOME_COORDS = { lat: 48.1588861281, lng: 17.0640099049, name: "ŠD Mladosť (Staré Grunty 53)" };
-
-    // Функция создания иконок с эмодзи
     function createIcon(emoji, className) {
       return L.divIcon({
         html: `<span style="font-size:1.8rem;line-height:1;" role="img" aria-label="${emoji}">${emoji}</span>`,
@@ -270,7 +298,7 @@
       });
     }
 
-    // Маркер школы с погодой
+    // Permanent School Marker with Open-Meteo Weather API integration
     const markerSchool = L.marker([SCHOOL_COORDS.lat, SCHOOL_COORDS.lng], {
       icon: createIcon("🏫", "school-icon"),
       alt: SCHOOL_COORDS.name
@@ -301,13 +329,13 @@
         );
       });
 
-    // Маркер дома (ШД Младость, Старе Грунты 53)
+    // Permanent Home Marker (ŠD Mladosť)
     L.marker([HOME_COORDS.lat, HOME_COORDS.lng], {
       icon: createIcon("🏠", "home-icon"),
       alt: HOME_COORDS.name
     }).addTo(map).bindPopup(`<strong>${HOME_COORDS.name}</strong><br>Bydlisko`);
 
-    // --- Логика пользовательских точек ---
+    // User Points State & LocalStorage Persistence
     let pendingLatLng = null;
     let userPoints = [];
     let selectedPointId = null;
@@ -378,13 +406,17 @@
       const list = document.getElementById("points-list");
       list.innerHTML = "";
 
+      const emptyStateEl = document.getElementById("empty-state");
       if (userPoints.length === 0) {
+        emptyStateEl.style.display = "block";
         const li = document.createElement("li");
         li.textContent = "Zatiaľ žiadne body.";
         li.style.color = "var(--color-text-muted)";
         li.style.cursor = "default";
         list.appendChild(li);
         return;
+      } else {
+        emptyStateEl.style.display = "none";
       }
 
       userPoints.forEach(point => {
@@ -394,17 +426,29 @@
         const nameSpan = document.createElement("span");
         nameSpan.textContent = point.name;
         nameSpan.style.cursor = "pointer";
+        nameSpan.setAttribute("role", "button");
+        nameSpan.setAttribute("tabindex", "0");
+        nameSpan.setAttribute("aria-label", `Vybrať bod: ${point.name}`);
 
-        nameSpan.addEventListener("click", () => {
+        const selectHandler = () => {
           selectedPointId = point.id;
           renderPointsList();
           map.setView([point.lat, point.lng], 15);
           point.marker.openPopup();
+        };
+
+        nameSpan.addEventListener("click", selectHandler);
+        nameSpan.addEventListener("keydown", e => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectHandler();
+          }
         });
 
         const delBtn = document.createElement("button");
         delBtn.className = "point-delete";
         delBtn.textContent = "✕";
+        delBtn.setAttribute("aria-label", `Odstrániť bod: ${point.name}`);
         delBtn.addEventListener("click", () => {
           map.removeLayer(point.marker);
           userPoints = userPoints.filter(p => p.id !== point.id);
@@ -421,9 +465,9 @@
       });
     }
 
-    // --- Расчет расстояния (Хаверсайн) ---
+    // --- Haversine Formula (Custom implementation as required by assignment) ---
     function haversineDistance(lat1, lng1, lat2, lng2) {
-      const R = 6371; // км
+      const R = 6371; // Earth radius in km
       const toRad = deg => (deg * Math.PI) / 180;
 
       const dLat = toRad(lat2 - lat1);
@@ -456,8 +500,10 @@
       const targetKey = document.getElementById("target-select").value;
       const target = targetKey === "school" ? SCHOOL_COORDS : HOME_COORDS;
 
+      // Calculate distance with custom Haversine formula
       const dist = haversineDistance(point.lat, point.lng, target.lat, target.lng);
 
+      // Draw polyline on map
       clearLine();
       activeLine = L.polyline(
         [[point.lat, point.lng], [target.lat, target.lng]],
@@ -465,9 +511,14 @@
       ).addTo(map);
       map.fitBounds(activeLine.getBounds(), { padding: [40, 40] });
 
+      // Display distance and update marker popup with basic info
       resultEl.style.display = "block";
       valueEl.textContent = dist.toFixed(2) + " km";
       infoEl.textContent = `Vzdušná vzdialenosť medzi "${point.name}" a "${target.name}"`;
+
+      point.marker.bindPopup(
+        `<strong>${point.name}</strong><br>Vzdialenosť do "${target.name}": ${dist.toFixed(2)} km`
+      ).openPopup();
     });
 
     function clearLine() {
@@ -494,6 +545,7 @@
 
     restorePoints();
 
+    // Leaflet resize fix inside CSS Grid
     setTimeout(() => {
       map.invalidateSize();
     }, 150);

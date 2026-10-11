@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mykola Todorov — Profil</title>
-  <meta name="description" content="Osobná webová vizitka Mykolu Todorova — študenta aplikovanej informatiky na FEI STU v Bratislave.">
+  <meta name="description"
+    content="Osobná webová vizitka Mykolu Todorova — študenta aplikovanej informatiky na FEI STU v Bratislave.">
   <!-- Open Graph -->
   <meta property="og:title" content="Mykola Todorov — Profil">
   <meta property="og:description" content="Študent aplikovanej informatiky, zaujíma ma webový vývoj a programovanie.">
@@ -16,7 +18,8 @@
   <style>
     /* --- Profile-specific styles --- */
     .profile-intro {
-      display: flow-root; /* clearfix for float */
+      display: flow-root;
+      /* clearfix for float */
     }
 
     .profile-photo {
@@ -69,6 +72,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Skip link -->
   <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
@@ -87,7 +91,8 @@
   <!-- Navigation -->
   <nav class="site-nav" aria-label="Hlavná navigácia">
     <div class="container">
-      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav"
+        aria-label="Otvoriť menu">&#9776;</button>
       <ul class="nav__list" id="main-nav">
         <li><a class="nav__link nav__link--active" href="index.html" aria-current="page">Profil</a></li>
         <li><a class="nav__link" href="pages/cv.html">Životopis</a></li>
@@ -106,14 +111,8 @@
 
       <section class="card" aria-label="Krátky profil">
         <div class="profile-intro">
-          <img
-            class="profile-photo"
-            src="img/me.jpg"
-            alt="Mykola Todorov — portrétna fotografia"
-            width="200"
-            height="220"
-            loading="lazy"
-          >
+          <img class="profile-photo" src="img/me.jpg" alt="Mykola Todorov — portrétna fotografia" width="200"
+            height="220" loading="lazy">
           <p>
             Som študent tretieho ročníka <strong>Aplikovanej informatiky</strong> na Fakulte elektrotechniky
             a informatiky STU v Bratislave. Zaujíma ma webový vývoj, backend programovanie a riešenie
@@ -128,11 +127,8 @@
 
         <h2>Moje tri kľúčové zručnosti</h2>
         <ul class="key-skills">
-          <li>⚡ JavaScript / TypeScript</li>
           <li>🐍 Python</li>
           <li>🔧 C / C++</li>
-          <li>🌐 HTML &amp; CSS</li>
-          <li>🗄️ Databázy (SQL)</li>
           <li>🐧 Linux / Terminál</li>
         </ul>
 
@@ -173,4 +169,5 @@
 
   <script src="js/script.js"></script>
 </body>
+
 </html>

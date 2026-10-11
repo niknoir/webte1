@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,7 +66,7 @@
 
     .skill-bar {
       height: 8px;
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0, 0, 0, 0.1);
       border-radius: 99px;
       overflow: hidden;
     }
@@ -135,7 +136,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: rgba(255,255,255,0.5);
+      background-color: rgba(255, 255, 255, 0.5);
       padding: var(--space-sm) var(--space);
       border-radius: var(--radius-sm);
       font-size: var(--font-size-sm);
@@ -157,6 +158,7 @@
     }
   </style>
 </head>
+
 <body>
   <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
 
@@ -172,7 +174,8 @@
 
   <nav class="site-nav" aria-label="Hlavná navigácia">
     <div class="container">
-      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav"
+        aria-label="Otvoriť menu">&#9776;</button>
       <ul class="nav__list" id="main-nav">
         <li><a class="nav__link" href="../index.html">Profil</a></li>
         <li><a class="nav__link nav__link--active" href="cv.html" aria-current="page">Životopis</a></li>
@@ -190,14 +193,8 @@
       <div class="cv-layout">
         <!-- LEFT SIDEBAR -->
         <aside class="cv-sidebar" aria-label="Kontakt a fotografia">
-          <img
-            class="cv-photo"
-            src="../img/me.jpg"
-            alt="Mykola Todorov — fotografia pre CV"
-            width="260"
-            height="346"
-            loading="lazy"
-          >
+          <img class="cv-photo" src="../img/me.jpg" alt="Mykola Todorov — fotografia pre CV" width="260" height="346"
+            loading="lazy">
 
           <h2>Kontakt</h2>
           <address>
@@ -216,24 +213,39 @@
           <h2>Programovacie zručnosti</h2>
           <ul class="skill-list" aria-label="Programovacie zručnosti">
             <li>
-              <div class="skill-label"><span>JavaScript / TypeScript</span><span>80%</span></div>
-              <div class="skill-bar"><div class="skill-bar-fill" style="width:80%" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="JavaScript 80%"></div></div>
+              <div class="skill-label"><span>JavaScript / TypeScript</span><span>35%</span></div>
+              <div class="skill-bar">
+                <div class="skill-bar-fill" style="width:35%" role="progressbar" aria-valuenow="35" aria-valuemin="0"
+                  aria-valuemax="100" aria-label="JavaScript 35%"></div>
+              </div>
             </li>
             <li>
-              <div class="skill-label"><span>Python</span><span>75%</span></div>
-              <div class="skill-bar"><div class="skill-bar-fill" style="width:75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Python 75%"></div></div>
+              <div class="skill-label"><span>Python</span><span>60%</span></div>
+              <div class="skill-bar">
+                <div class="skill-bar-fill" style="width:60%" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                  aria-valuemax="100" aria-label="Python 75%"></div>
+              </div>
             </li>
             <li>
-              <div class="skill-label"><span>C / C++</span><span>70%</span></div>
-              <div class="skill-bar"><div class="skill-bar-fill" style="width:70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="C/C++ 70%"></div></div>
+              <div class="skill-label"><span>C / C++</span><span>85%</span></div>
+              <div class="skill-bar">
+                <div class="skill-bar-fill" style="width:85%" role="progressbar" aria-valuenow="70" aria-valuemin="0"
+                  aria-valuemax="100" aria-label="C/C++ 85%"></div>
+              </div>
             </li>
             <li>
-              <div class="skill-label"><span>HTML &amp; CSS</span><span>85%</span></div>
-              <div class="skill-bar"><div class="skill-bar-fill skill-bar-fill--accent" style="width:85%" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="HTML CSS 85%"></div></div>
+              <div class="skill-label"><span>HTML &amp; CSS</span><span>60%</span></div>
+              <div class="skill-bar">
+                <div class="skill-bar-fill skill-bar-fill--accent" style="width:60%" role="progressbar"
+                  aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="HTML CSS 60%"></div>
+              </div>
             </li>
             <li>
               <div class="skill-label"><span>SQL / PostgreSQL</span><span>60%</span></div>
-              <div class="skill-bar"><div class="skill-bar-fill skill-bar-fill--accent" style="width:60%" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="SQL 60%"></div></div>
+              <div class="skill-bar">
+                <div class="skill-bar-fill skill-bar-fill--accent" style="width:60%" role="progressbar"
+                  aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="SQL 60%"></div>
+              </div>
             </li>
           </ul>
         </aside>
@@ -246,13 +258,13 @@
               <span class="timeline__year">2024 — súčasnosť</span>
               <h3>FEI STU Bratislava</h3>
               <p>Bakalárske štúdium — Aplikovaná informatika<br>
-              3. ročník (aktuálne)</p>
+                3. ročník (aktuálne)</p>
             </li>
             <li class="timeline__item">
               <span class="timeline__year">2020 — 2024</span>
               <h3>Gymnázium</h3>
               <p>Všeobecné maturitné vzdelanie<br>
-              Odesa, Ukrajina</p>
+                Odesa, Ukrajina</p>
             </li>
           </ul>
 
@@ -264,7 +276,7 @@
             </li>
             <li class="lang-item">
               <span>🇷🇺 Ruština</span>
-              <span class="lang-level">C2 — Pokročilý</span>
+              <span class="lang-level">Rodný jazyk</span>
             </li>
             <li class="lang-item">
               <span>🇸🇰 Slovenčina</span>
@@ -272,7 +284,7 @@
             </li>
             <li class="lang-item">
               <span>🇬🇧 Angličtina</span>
-              <span class="lang-level">B2 — Vyšší stredný</span>
+              <span class="lang-level">B1 — Stredný</span>
             </li>
           </ul>
 
@@ -280,8 +292,7 @@
           <ul>
             <li>Git / GitHub — správa verzií a tímová spolupráca</li>
             <li>Linux / Terminál — každodenné používanie</li>
-            <li>REST API — návrh a konzumácia</li>
-            <li>Agile / Scrum — základy</li>
+            <li>C/C++ - programovanie</li>
           </ul>
         </section>
       </div>
@@ -303,4 +314,5 @@
 
   <script src="../js/script.js"></script>
 </body>
+
 </html>
