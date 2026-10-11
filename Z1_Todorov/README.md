@@ -1,7 +1,7 @@
 # Mykola Todorov — Osobná webová vizitka
 
-**Meno:** Mykola Todorov  
-**Krúžok / skupina:** FEI STU — Aplikovaná informatika, 3. ročník
+Meno: Mykola Todorov  
+Skupina: FEI STU — Aplikovaná informatika, 3. ročník
 
 ## Odkaz na stránku
 
@@ -16,15 +16,7 @@ Osobná webová vizitka pozostávajúca z piatich podstránok:
 4. **pages/schedule.html** — Rozvrh: tabuľka 7–21 hod., filter Prednášky/Cvičenia, postup semestra
 5. **pages/map.html** — Mapa: Leaflet.js, vlastné body, Haversinova vzdialenosť, localStorage
 
-## Zdroje
-
-| Typ | Zdroj | Licencia |
-|-----|-------|----------|
-| Obrázky | vlastné / [Unsplash](https://unsplash.com) | CC0 |
-| Mapové podklady | [OpenStreetMap](https://www.openstreetmap.org/copyright) | ODbL |
-| Mapová knižnica | [Leaflet.js](https://leafletjs.com) v1.9.4 | BSD 2-Clause |
-| Font | system-ui (systémový) | — |
 
 ## Použitie AI nástrojov
 
-Projekt bol vytvorený s pomocou AI nástroja **Google Antigravity (Gemini)** na generovanie štruktúry HTML, CSS dizajnového systému a JavaScript logiky. Celý kód bol následne skontrolovaný, pochopený a upravený študentom. Autor je schopný vysvetliť každú časť implementácie.
+Vytvoril som kod pomocou Google Antigravity (Gemini). Celý kód bol následne skontrolovaný, pochopený a upravený.
