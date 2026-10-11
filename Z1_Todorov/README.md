@@ -1,11 +1,7 @@
 # Mykola Todorov — Osobná webová vizitka
 
 Meno: Mykola Todorov  
-Skupina: FEI STU — Aplikovaná informatika, 3. ročník
-
-## Odkaz na stránku
-
-> Stránka je určená na lokálne spustenie. Pre školský server: *bude doplnené po nasadení.*
+FEI STU — Aplikovaná informatika, 3. ročník
 
 ## Obsah webu
 
