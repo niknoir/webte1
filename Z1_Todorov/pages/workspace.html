@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mykola Todorov — Pracovné prostredie</title>
   <meta name="description" content="Interaktívny obrázok môjho pracovného prostredia — čo používam každý deň.">
-  <!-- Open Graph -->
   <meta property="og:title" content="Mykola Todorov — Pracovné prostredie">
   <meta property="og:description" content="Ukážka pracovného stola a nástrojov, ktoré používam na štúdium a projekty.">
   <meta property="og:image" content="../img/workspace.jpg">
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-  <!-- Styles -->
   <link rel="stylesheet" href="../css/styles.css">
   <style>
-    /* --- Workspace page styles --- */
     .workspace-section {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
     }
 
-    /* Image wrapper with overlays */
+    /* Container keeps relative positioning for absolute hotspots */
     .hotspot-container {
       position: relative;
-      display: inline-block;
+      display: block;
       width: 100%;
       border-radius: var(--radius);
-      overflow: hidden;
-      line-height: 0; /* remove bottom gap */
+      overflow: visible;
+      /* allow panels to overflow image */
+      line-height: 0;
+      user-select: none;
     }
 
     .hotspot-image {
@@ -35,17 +34,18 @@
       height: auto;
       display: block;
       border-radius: var(--radius);
+      border: 2px solid var(--color-accent);
     }
 
-    /* Individual hotspot overlay */
+    /* Hotspot hit-area */
     .hotspot {
       position: absolute;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      /* visible ring */
-      outline: 2px solid rgba(163,177,138,0.7);
-      background-color: rgba(163,177,138,0.15);
-      transition: background-color var(--transition), outline-color var(--transition);
+      outline: 2px solid rgba(163, 177, 138, 0.75);
+      background-color: rgba(163, 177, 138, 0.18);
+      transition: background-color 0.2s, outline-color 0.2s;
+      /* panel positioning context */
     }
 
     .hotspot:focus-visible {
@@ -55,52 +55,90 @@
 
     .hotspot:hover,
     .hotspot:focus-within {
-      background-color: rgba(58,90,64,0.25);
+      background-color: rgba(58, 90, 64, 0.28);
       outline-color: var(--color-brand);
-      z-index: 10;
+      z-index: 30;
     }
 
-    /* Popup panel */
+    /* ---- Popup panel ---- */
     .hotspot__panel {
       position: absolute;
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-accent);
+      background-color: #fff;
+      border: 1.5px solid var(--color-brand-alt);
       border-radius: var(--radius);
-      padding: var(--space-sm) var(--space);
-      width: 200px;
+      padding: 10px 14px;
+      width: 210px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
-      z-index: 20;
-      top: calc(100% + 6px);
+      transition: opacity 0.2s ease;
+      z-index: 50;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+      line-height: 1.4;
+      /* default: below + center */
+      top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Panel that would go off right edge → align left */
+    .hotspot--right .hotspot__panel {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+
+    /* Panel that would go off left edge → align right */
+    .hotspot--left .hotspot__panel {
+      left: 0;
+      transform: none;
+    }
+
+    /* Panel that is near bottom of image → show above */
+    .hotspot--above .hotspot__panel {
+      top: auto;
+      bottom: calc(100% + 8px);
     }
 
     .hotspot__panel h3 {
-      font-size: var(--font-size-sm);
-      margin-bottom: 4px;
+      font-size: 0.82rem;
+      margin-bottom: 5px;
       color: var(--color-brand);
+      font-weight: 700;
     }
 
     .hotspot__panel p {
-      font-size: 0.8rem;
-      margin-bottom: 0;
+      font-size: 0.78rem;
+      margin: 0;
       color: var(--color-text-muted);
+      line-height: 1.45;
     }
 
-    /* Show panel on hover / focus-within */
+    /* Show on hover / focus */
     .hotspot:hover .hotspot__panel,
     .hotspot:focus-within .hotspot__panel {
       opacity: 1;
       pointer-events: auto;
     }
 
-    /* ===== MOBILE: panels below image ===== */
+    /* Label badge inside hotspot */
+    .hotspot__label {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      background-color: var(--color-brand);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      line-height: 1.4;
+      pointer-events: none;
+    }
+
+    /* ===== MOBILE ===== */
     @media (max-width: 768px) {
       .hotspot__panel {
-        display: none !important; /* hide overlapping panels */
+        display: none !important;
       }
 
       .mobile-panel-area {
@@ -109,28 +147,33 @@
     }
 
     .mobile-panel-area {
-      display: none; /* hidden on desktop */
+      display: none;
       background-color: var(--color-surface);
       border-radius: var(--radius);
       padding: var(--space-md);
       margin-top: var(--space);
-      min-height: 100px;
+      min-height: 90px;
     }
 
-    .mobile-panel-area[data-active] h3,
-    .mobile-panel-area[data-active] p {
-      display: block;
+    .mobile-panel-area h3 {
+      font-size: var(--font-size-base);
+      color: var(--color-brand);
+      margin-bottom: 6px;
     }
 
-    /* Image source credit */
+    .mobile-panel-area p {
+      font-size: var(--font-size-sm);
+      margin: 0;
+    }
+
     .image-source {
       font-size: var(--font-size-sm);
       color: var(--color-text-muted);
       margin-top: var(--space-sm);
-      text-align: right;
     }
   </style>
 </head>
+
 <body>
   <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
 
@@ -146,11 +189,13 @@
 
   <nav class="site-nav" aria-label="Hlavná navigácia">
     <div class="container">
-      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav"
+        aria-label="Otvoriť menu">&#9776;</button>
       <ul class="nav__list" id="main-nav">
         <li><a class="nav__link" href="../index.html">Profil</a></li>
         <li><a class="nav__link" href="cv.html">Životopis</a></li>
-        <li><a class="nav__link nav__link--active" href="workspace.html" aria-current="page">Pracovné prostredie</a></li>
+        <li><a class="nav__link nav__link--active" href="workspace.html" aria-current="page">Pracovné prostredie</a>
+        </li>
         <li><a class="nav__link" href="schedule.html">Rozvrh</a></li>
         <li><a class="nav__link" href="map.html">Mapa</a></li>
       </ul>
@@ -160,39 +205,30 @@
   <main id="main-content">
     <div class="container workspace-section">
       <h1>Ako pracujem</h1>
-      <p>Pozrite si môj pracovný stôl a nástroje, ktoré používam každý deň. Kliknite alebo umiestnite kurzor na zvýraznené oblasti.</p>
+      <p>Pozrite si môj pracovný stôl. Umiestnite kurzor alebo kliknite na zvýraznené oblasti pre viac informácií.</p>
 
-      <!-- Hotspot image container — JS fills it -->
       <div class="hotspot-container" id="hotspot-container" aria-label="Interaktívny obrázok pracovného prostredia">
-        <img
-          class="hotspot-image"
-          src="../img/workspace.jpg"
-          alt="Môj pracovný stôl s počítačom, klávesnicou a programovacími nástrojmi"
-          id="workspace-img"
-          width="900"
-          height="600"
-        >
-        <!-- Hotspots injected by JS -->
+        <img class="hotspot-image" src="../img/workspace.jpg"
+          alt="Môj pracovný stôl — Samsung Odyssey G4, Lemokey P1HE klávesnica, Glorious Model O myš" id="workspace-img"
+          width="960" height="640">
+        <!-- Hotspots generated by JS below -->
       </div>
 
-      <!-- Mobile fallback panel (always visible below image on small screens) -->
+      <!-- Mobile fallback -->
       <div class="mobile-panel-area" id="mobile-panel" aria-live="polite">
         <h3 id="mobile-panel-title">Kliknite na oblasť obrázka</h3>
-        <p id="mobile-panel-text">Vyberte niektorú z označených oblastí a zobrazí sa popis.</p>
+        <p id="mobile-panel-text">Vyberte niektorú zo zvýraznených oblastí a zobrazí sa popis.</p>
       </div>
 
-      <p class="image-source">
-        Obrázok: vlastná fotografia alebo
-        <a href="https://unsplash.com/photos/desk-setup" target="_blank" rel="noopener noreferrer">Unsplash — desk setup</a>
-      </p>
+      <p class="image-source">Obrázok: vlastná fotografia</p>
 
       <h2>Môj setup</h2>
       <ul>
-        <li><strong>Notebook:</strong> každodenný pracovný nástroj pre štúdium a projekty</li>
-        <li><strong>Editor:</strong> VS Code s rozšíreniami pre JS, Python a C++</li>
-        <li><strong>Terminál:</strong> Linux / Bash — základná pracovná plocha</li>
-        <li><strong>Prehliadač:</strong> Firefox + DevTools pre webový vývoj</li>
-        <li><strong>Verzovanie:</strong> Git + GitHub pre všetky projekty</li>
+        <li><strong>Monitor:</strong> Samsung Odyssey G4 27" — 240 Hz IPS herný monitor</li>
+        <li><strong>Klávesnica:</strong> Lemokey P1HE — mechanická s magnetickými spínačmi (Hall Effect)</li>
+        <li><strong>Myš:</strong> Glorious Model O — ultraľahká herná myš s honeycomb dizajnom</li>
+        <li><strong>Slúchadlá:</strong> HyperX — každodenné počúvanie a hovory</li>
+        <li><strong>Koberec:</strong> veľká podložka pod myš s kvetovým vzorom</li>
       </ul>
     </div>
   </main>
@@ -206,7 +242,7 @@
       </address>
       <div class="footer-sources">
         <p>&copy; 2026 Mykola Todorov — FEI STU Bratislava</p>
-        <p>Foto: <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a> (CC0)</p>
+        <p>Foto: vlastná fotografia</p>
       </div>
     </div>
   </footer>
@@ -214,100 +250,116 @@
   <script src="../js/script.js"></script>
   <script>
     /**
-     * workspace.js — generates hotspots from data array
-     * Interaction is handled exclusively via CSS (hover/focus-within)
-     * JS only generates the HTML structure on page load
+     * Hotspot positions are expressed as percentages of the image dimensions.
+     * Measured from the actual workspace.jpg photo:
+     *   - Monitor (Samsung Odyssey G4): large screen, top-center area
+     *   - Keyboard (Lemokey P1HE): white keyboard, bottom-center
+     *   - Mouse (Glorious Model O): right side, bottom area
+     *   - Headphones (HyperX): behind monitor, right-center
+     *   - Rubik's cube: right side on desk surface
+     *
+     * panelDir: where the popup panel opens
+     *   "" = below-center (default)
+     *   "above" = above the hotspot
+     *   "left"  = align panel to left edge of hotspot
+     *   "right" = align panel to right edge of hotspot
      */
-
-    // Hotspot data — each item has position (% of image), title and description
     const HOTSPOTS = [
       {
-        id: "hs-laptop",
-        label: "Notebook",
-        title: "Notebook",
-        text: "Môj hlavný pracovný nástroj. Používam ho pre všetky projekty, štúdium a vývoj.",
-        top: "20%", left: "35%", width: "25%", height: "30%"
+        id: "hs-monitor",
+        label: "Monitor",
+        title: "Samsung Odyssey G4 27\"",
+        text: "Herný IPS monitor, 240 Hz, 1ms, FHD. Ideálny pre prácu aj hranie — ostrý obraz pri každej aktivite.",
+        top: "4%", left: "15%", width: "68%", height: "58%",
+        panelDir: ""
       },
       {
         id: "hs-keyboard",
         label: "Klávesnica",
-        title: "Mechanická klávesnica",
-        text: "Rýchlosť a presnosť pri písaní kódu — základ každého programátora.",
-        top: "55%", left: "30%", width: "30%", height: "15%"
+        title: "Lemokey P1HE",
+        text: "Mechanická klávesnica s Hall Effect magnetickými spínačmi. Biela farba, prémiový pocit pri písaní kódu.",
+        top: "68%", left: "22%", width: "48%", height: "22%",
+        panelDir: "above"
       },
       {
-        id: "hs-editor",
-        label: "VS Code",
-        title: "VS Code — editor kódu",
-        text: "Môj obľúbený editor s rozšíreniami pre JavaScript, Python a C++. Jedna z mojich kľúčových technológií.",
-        top: "22%", left: "38%", width: "18%", height: "20%"
+        id: "hs-mouse",
+        label: "Myš",
+        title: "Glorious Model O",
+        text: "Ultraľahká herná myš (67 g) s honeycomb dizajnom. Biela farba, vysoká presnosť senzora — kľúčová vec môjho setupu.",
+        top: "66%", left: "76%", width: "17%", height: "24%",
+        panelDir: "right"
       },
       {
-        id: "hs-terminal",
-        label: "Terminál",
-        title: "Linux Terminál",
-        text: "Bash / Zsh terminál — pracujem v ňom každý deň. Git, npm, python — všetko tu.",
-        top: "60%", left: "65%", width: "20%", height: "18%"
+        id: "hs-headphones",
+        label: "Slúchadlá",
+        title: "HyperX slúchadlá",
+        text: "Pohodlné slúchadlá pre každodenné použitie — hudba počas kódovania aj hovory s priateľmi.",
+        top: "48%", left: "56%", width: "14%", height: "18%",
+        panelDir: "right"
       },
       {
-        id: "hs-books",
-        label: "Knižky",
-        title: "Odborná literatúra",
-        text: "Algoritmy a dátové štruktúry, Počítačové siete — základ štúdia informatiky.",
-        top: "15%", left: "70%", width: "18%", height: "35%"
+        id: "hs-cube",
+        label: "Kocka",
+        title: "Rubikova kocka",
+        text: "Vždy na stole — oddych pre mozog. Pomáha mi myslieť a relaxovať.Môj rekord v skladaní kocky je 20 sekúnd)",
+        top: "50%", left: "71%", width: "9%", height: "16%",
+        panelDir: "above"
       }
     ];
 
     (function generateHotspots() {
       const container = document.getElementById("hotspot-container");
       const mobileTitle = document.getElementById("mobile-panel-title");
-      const mobileText  = document.getElementById("mobile-panel-text");
+      const mobileText = document.getElementById("mobile-panel-text");
       if (!container) return;
 
       HOTSPOTS.forEach((hs, idx) => {
         const el = document.createElement("div");
-        el.className = "hotspot";
+        el.className = "hotspot" +
+          (hs.panelDir === "right" ? " hotspot--right" : "") +
+          (hs.panelDir === "left" ? " hotspot--left" : "") +
+          (hs.panelDir === "above" ? " hotspot--above" : "");
         el.id = hs.id;
         el.setAttribute("tabindex", "0");
         el.setAttribute("role", "button");
         el.setAttribute("aria-label", hs.label + " — " + hs.title);
 
-        // Position from data
-        el.style.top    = hs.top;
-        el.style.left   = hs.left;
-        el.style.width  = hs.width;
+        el.style.top = hs.top;
+        el.style.left = hs.left;
+        el.style.width = hs.width;
         el.style.height = hs.height;
 
-        // Popup panel (CSS-driven, no JS needed for show/hide)
+        // Small label badge
+        const badge = document.createElement("span");
+        badge.className = "hotspot__label";
+        badge.textContent = hs.label;
+        badge.setAttribute("aria-hidden", "true");
+        el.appendChild(badge);
+
+        // Popup panel (CSS-driven show/hide)
         const panel = document.createElement("div");
         panel.className = "hotspot__panel";
         panel.setAttribute("aria-hidden", "true");
         panel.innerHTML = `<h3>${hs.title}</h3><p>${hs.text}</p>`;
-
         el.appendChild(panel);
+
         container.appendChild(el);
 
-        // Mobile: update panel on click/focus
+        // Mobile: update bottom panel
         function updateMobilePanel() {
           mobileTitle.textContent = hs.title;
-          mobileText.textContent  = hs.text;
+          mobileText.textContent = hs.text;
         }
-
         el.addEventListener("click", updateMobilePanel);
         el.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            updateMobilePanel();
-          }
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); updateMobilePanel(); }
         });
 
-        // First hotspot shown by default on mobile
-        if (idx === 0) {
-          mobileTitle.textContent = hs.title;
-          mobileText.textContent  = hs.text;
-        }
+        // First hotspot is default on mobile
+        if (idx === 0) updateMobilePanel();
       });
     })();
   </script>
 </body>
+
 </html>
