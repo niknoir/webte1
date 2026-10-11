@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mykola Todorov — Životopis</title>
+  <meta name="description" content="Životopis Mykolu Todorova — vzdelanie, zručnosti a kontaktné informácie.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mykola Todorov — Životopis">
+  <meta property="og:description" content="Vzdelanie, programovacie a jazykové zručnosti študenta FEI STU.">
+  <meta property="og:image" content="../img/me.jpg">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/print.css">
+  <style>
+    /* --- CV layout: two columns, full height --- */
+    .cv-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .cv-sidebar {
+      background-color: var(--color-surface);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+    }
+
+    .cv-main {
+      background-color: var(--color-surface-alt);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+    }
+
+    .cv-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-bottom: var(--space-md);
+      border: 3px solid var(--color-brand-alt);
+      display: block;
+    }
+
+    /* Skill bars */
+    .skill-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .skill-list li {
+      margin-bottom: var(--space);
+    }
+
+    .skill-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: var(--font-size-sm);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .skill-bar {
+      height: 8px;
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background-color: var(--color-brand);
+      border-radius: 99px;
+      transition: width 0.6s ease;
+    }
+
+    .skill-bar-fill--accent {
+      background-color: var(--color-brand-alt);
+    }
+
+    /* Education timeline */
+    .timeline {
+      list-style: none;
+      padding: 0;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--color-accent);
+    }
+
+    .timeline__item {
+      padding-left: var(--space-lg);
+      position: relative;
+      margin-bottom: var(--space-md);
+    }
+
+    .timeline__item::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--color-brand);
+      border: 2px solid var(--color-surface-alt);
+    }
+
+    .timeline__year {
+      font-size: var(--font-size-sm);
+      color: var(--color-brand-alt);
+      font-weight: 600;
+    }
+
+    /* Language tags */
+    .lang-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(255,255,255,0.5);
+      padding: var(--space-sm) var(--space);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+      margin-bottom: 0;
+    }
+
+    .lang-level {
+      font-size: 0.75rem;
+      background-color: var(--color-brand-alt);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    @media (max-width: 768px) {
+      .cv-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="monogram" href="../index.html" aria-label="Domov — MT monogram">MT</a>
+      <div class="header-info">
+        <a class="site-title" href="../index.html">Mykola Todorov</a>
+        <p class="site-tagline">Študent informatiky, zaujíma ma webový vývoj a programovanie</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="site-nav" aria-label="Hlavná navigácia">
+    <div class="container">
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <ul class="nav__list" id="main-nav">
+        <li><a class="nav__link" href="../index.html">Profil</a></li>
+        <li><a class="nav__link nav__link--active" href="cv.html" aria-current="page">Životopis</a></li>
+        <li><a class="nav__link" href="workspace.html">Pracovné prostredie</a></li>
+        <li><a class="nav__link" href="schedule.html">Rozvrh</a></li>
+        <li><a class="nav__link" href="map.html">Mapa</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <div class="container">
+      <h1>Životopis</h1>
+
+      <div class="cv-layout">
+        <!-- LEFT SIDEBAR -->
+        <aside class="cv-sidebar" aria-label="Kontakt a fotografia">
+          <img
+            class="cv-photo"
+            src="../img/me.jpg"
+            alt="Mykola Todorov — fotografia pre CV"
+            width="260"
+            height="346"
+            loading="lazy"
+          >
+
+          <h2>Kontakt</h2>
+          <address>
+            <p>
+              📧 <a href="mailto:xtodorovm@stuba.sk">xtodorovm@stuba.sk</a>
+            </p>
+            <p>
+              📞 <a href="tel:+421000000000">+421 XXX XXX XXX</a>
+            </p>
+            <p>
+              📍 Bratislava, Karlova Ves<br>
+              Staré Grunty 53, 84104
+            </p>
+          </address>
+
+          <h2>Programovacie zručnosti</h2>
+          <ul class="skill-list" aria-label="Programovacie zručnosti">
+            <li>
+              <div class="skill-label"><span>JavaScript / TypeScript</span><span>80%</span></div>
+              <div class="skill-bar"><div class="skill-bar-fill" style="width:80%" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="JavaScript 80%"></div></div>
+            </li>
+            <li>
+              <div class="skill-label"><span>Python</span><span>75%</span></div>
+              <div class="skill-bar"><div class="skill-bar-fill" style="width:75%" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Python 75%"></div></div>
+            </li>
+            <li>
+              <div class="skill-label"><span>C / C++</span><span>70%</span></div>
+              <div class="skill-bar"><div class="skill-bar-fill" style="width:70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="C/C++ 70%"></div></div>
+            </li>
+            <li>
+              <div class="skill-label"><span>HTML &amp; CSS</span><span>85%</span></div>
+              <div class="skill-bar"><div class="skill-bar-fill skill-bar-fill--accent" style="width:85%" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" aria-label="HTML CSS 85%"></div></div>
+            </li>
+            <li>
+              <div class="skill-label"><span>SQL / PostgreSQL</span><span>60%</span></div>
+              <div class="skill-bar"><div class="skill-bar-fill skill-bar-fill--accent" style="width:60%" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="SQL 60%"></div></div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- RIGHT MAIN -->
+        <section class="cv-main">
+          <h2>Vzdelanie</h2>
+          <ul class="timeline" aria-label="Vzdelanie">
+            <li class="timeline__item">
+              <span class="timeline__year">2024 — súčasnosť</span>
+              <h3>FEI STU Bratislava</h3>
+              <p>Bakalárske štúdium — Aplikovaná informatika<br>
+              3. ročník (aktuálne)</p>
+            </li>
+            <li class="timeline__item">
+              <span class="timeline__year">2020 — 2024</span>
+              <h3>Gymnázium</h3>
+              <p>Všeobecné maturitné vzdelanie<br>
+              Odesa, Ukrajina</p>
+            </li>
+          </ul>
+
+          <h2>Jazykové zručnosti</h2>
+          <ul class="lang-list" aria-label="Jazykové zručnosti">
+            <li class="lang-item">
+              <span>🇺🇦 Ukrajinčina</span>
+              <span class="lang-level">Rodný jazyk</span>
+            </li>
+            <li class="lang-item">
+              <span>🇷🇺 Ruština</span>
+              <span class="lang-level">C2 — Pokročilý</span>
+            </li>
+            <li class="lang-item">
+              <span>🇸🇰 Slovenčina</span>
+              <span class="lang-level">B1 — Stredný</span>
+            </li>
+            <li class="lang-item">
+              <span>🇬🇧 Angličtina</span>
+              <span class="lang-level">B2 — Vyšší stredný</span>
+            </li>
+          </ul>
+
+          <h2>Ďalšie zručnosti</h2>
+          <ul>
+            <li>Git / GitHub — správa verzií a tímová spolupráca</li>
+            <li>Linux / Terminál — každodenné používanie</li>
+            <li>REST API — návrh a konzumácia</li>
+            <li>Agile / Scrum — základy</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <address>
+        <strong>Mykola Todorov</strong>
+        <a href="mailto:xtodorovm@stuba.sk">xtodorovm@stuba.sk</a>
+        <a href="tel:+421000000000">+421 XXX XXX XXX</a>
+      </address>
+      <div class="footer-sources">
+        <p>&copy; 2026 Mykola Todorov — FEI STU Bratislava</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/script.js"></script>
+</body>
+</html>

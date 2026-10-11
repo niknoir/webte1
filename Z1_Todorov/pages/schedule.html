@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mykola Todorov — Rozvrh</title>
+  <meta name="description" content="Týždenný rozvrh hodín Mykolu Todorova — FEI STU, semester 2024/2025.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mykola Todorov — Rozvrh">
+  <meta property="og:description" content="Kedy mám prednášky, cvičenia a voľný čas.">
+  <meta property="og:image" content="../img/me.jpg">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* --- Schedule page styles --- */
+
+    /* Filter buttons row */
+    .schedule-filters {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-md);
+      align-items: center;
+    }
+
+    .schedule-filters .btn {
+      min-width: 100px;
+    }
+
+    /* Current status message */
+    .schedule-status {
+      background-color: var(--color-surface);
+      border-left: 4px solid var(--color-brand-alt);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: var(--space-sm) var(--space);
+      margin-bottom: var(--space);
+      font-size: var(--font-size-sm);
+    }
+
+    /* Table wrapper for horizontal scroll on mobile */
+    .schedule-scroll {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Schedule table */
+    .schedule-table {
+      width: 100%;
+      min-width: 700px;
+      border-collapse: collapse;
+      font-size: var(--font-size-sm);
+      background-color: var(--color-surface-alt);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .schedule-table th,
+    .schedule-table td {
+      padding: 6px 8px;
+      text-align: center;
+      border: 1px solid rgba(0,0,0,0.08);
+      vertical-align: middle;
+    }
+
+    /* Header row */
+    .schedule-table thead th {
+      background-color: var(--color-brand);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Time column */
+    .schedule-table .col-time {
+      background-color: var(--color-brand-alt);
+      color: #fff;
+      font-weight: 600;
+      white-space: nowrap;
+      width: 70px;
+    }
+
+    /* Zebra striping */
+    .schedule-table tbody tr:nth-of-type(even) {
+      background-color: rgba(220,232,212,0.5);
+    }
+
+    /* Cell types */
+    .schedule-table td[data-type="lecture"] {
+      background-color: #b7d4b0;
+      font-weight: 500;
+    }
+
+    .schedule-table td[data-type="exercise"] {
+      background-color: #d4e8c8;
+      font-weight: 500;
+    }
+
+    .schedule-table td[data-type="sport"] {
+      background-color: #e8d4b0;
+      font-weight: 500;
+    }
+
+    .schedule-table td[data-type="free"] {
+      color: #999;
+      font-size: 0.75rem;
+    }
+
+    /* Active / current cell highlight */
+    .schedule-table td.cell--current {
+      outline: 3px solid var(--color-brand);
+      outline-offset: -3px;
+      font-weight: 700;
+      animation: pulse-cell 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-cell {
+      0%, 100% { background-color: #8fbc8f; }
+      50%       { background-color: #6aab6a; }
+    }
+
+    /* Filter hidden state */
+    .schedule-table td.cell--hidden {
+      visibility: hidden;
+    }
+
+    /* No results message */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: var(--space-md);
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    /* Progress bar */
+    .semester-progress {
+      margin-top: var(--space-md);
+    }
+
+    .progress-bar-wrapper {
+      background-color: rgba(0,0,0,0.1);
+      border-radius: 99px;
+      height: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--color-brand-alt);
+      border-radius: 99px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-label {
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--space-sm);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 600px) {
+      .schedule-table {
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="monogram" href="../index.html" aria-label="Domov — MT monogram">MT</a>
+      <div class="header-info">
+        <a class="site-title" href="../index.html">Mykola Todorov</a>
+        <p class="site-tagline">Študent informatiky, zaujíma ma webový vývoj a programovanie</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="site-nav" aria-label="Hlavná navigácia">
+    <div class="container">
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <ul class="nav__list" id="main-nav">
+        <li><a class="nav__link" href="../index.html">Profil</a></li>
+        <li><a class="nav__link" href="cv.html">Životopis</a></li>
+        <li><a class="nav__link" href="workspace.html">Pracovné prostredie</a></li>
+        <li><a class="nav__link nav__link--active" href="schedule.html" aria-current="page">Rozvrh</a></li>
+        <li><a class="nav__link" href="map.html">Mapa</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <div class="container">
+      <h1>Kedy ma zastihnete</h1>
+
+      <!-- Current class status -->
+      <div class="schedule-status" id="schedule-status" aria-live="polite">
+        <span id="status-text">Načítavam aktuálny stav...</span>
+      </div>
+
+      <!-- Filter buttons -->
+      <div class="schedule-filters" role="group" aria-label="Filter rozvrhu">
+        <button class="btn btn--active active" id="filter-all"      data-filter="all"      aria-pressed="true">Všetko</button>
+        <button class="btn"                    id="filter-lecture"  data-filter="lecture"  aria-pressed="false">Prednášky</button>
+        <button class="btn"                    id="filter-exercise" data-filter="exercise" aria-pressed="false">Cvičenia</button>
+      </div>
+
+      <!-- Schedule table (7:00 – 21:00, Monday–Friday) -->
+      <div class="schedule-scroll" role="region" aria-label="Tabuľka rozvrhu">
+        <table class="schedule-table" id="schedule-table">
+          <caption class="visually-hidden">Týždenný rozvrh hodín, 7:00 – 21:00</caption>
+          <thead>
+            <tr>
+              <th scope="col">Čas</th>
+              <th scope="col">Pondelok</th>
+              <th scope="col">Utorok</th>
+              <th scope="col">Streda</th>
+              <th scope="col">Štvrtok</th>
+              <th scope="col">Piatok</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-body">
+            <!-- Rows inserted by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No results -->
+      <p class="no-results" id="no-results" role="alert">Pre vybraný filter nie sú žiadne hodiny v rozvrhu.</p>
+
+      <!-- Semester progress bar -->
+      <section class="semester-progress card" aria-label="Postup semestra">
+        <h2>Postup semestra</h2>
+        <div class="progress-label">
+          <span>Začiatok: 22.09.2026</span>
+          <span id="progress-percent">0%</span>
+          <span>Koniec: 19.12.2026</span>
+        </div>
+        <div class="progress-bar-wrapper" role="progressbar" id="progress-bar-wrapper"
+             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+             aria-label="Postup semestra">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width:0%"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <address>
+        <strong>Mykola Todorov</strong>
+        <a href="mailto:xtodorovm@stuba.sk">xtodorovm@stuba.sk</a>
+        <a href="tel:+421000000000">+421 XXX XXX XXX</a>
+      </address>
+      <div class="footer-sources">
+        <p>&copy; 2026 Mykola Todorov — FEI STU Bratislava</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/script.js"></script>
+  <script>
+    /**
+     * schedule.js — timetable logic
+     * Highlights current lesson, filter buttons, semester progress bar
+     */
+
+    // === Semester constants ===
+    const SEMESTER_START = new Date("2026-09-22T00:00:00");
+    const SEMESTER_END   = new Date("2026-12-19T23:59:59");
+
+    // === Schedule data structure ===
+    // times: array of hour strings "HH:MM"
+    // days: 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri (index from Monday)
+    // colspan: how many rows (1hr slots) to span
+    const SLOTS = [
+      "07:00","08:00","09:00","10:00","11:00","12:00",
+      "13:00","14:00","15:00","16:00","17:00","18:00",
+      "19:00","20:00"
+    ];
+
+    // Schedule: [dayIndex (0-4), startSlotIndex (0-13), rowspan, type, subject]
+    // dayIndex: 0=Mon,1=Tue,2=Wed,3=Thu,4=Fri
+    // type: "lecture" | "exercise" | "sport" | "free"
+    const SCHEDULE_DATA = [
+      // Monday
+      { day: 0, start: 2, span: 2, type: "lecture",  subject: "Webové technológie (prednáška)" },
+      { day: 0, start: 5, span: 2, type: "exercise", subject: "Algoritmy a DS (cvičenie)" },
+      // Tuesday
+      { day: 1, start: 1, span: 2, type: "lecture",  subject: "Algoritmy a DS (prednáška)" },
+      { day: 1, start: 4, span: 2, type: "exercise", subject: "Operačné systémy (cvičenie)" },
+      { day: 1, start: 8, span: 1, type: "sport",    subject: "Telesná výchova" },
+      // Wednesday
+      { day: 2, start: 2, span: 2, type: "lecture",  subject: "Operačné systémy (prednáška)" },
+      { day: 2, start: 6, span: 2, type: "exercise", subject: "Webové technológie (cvičenie)" },
+      // Thursday
+      { day: 3, start: 0, span: 2, type: "lecture",  subject: "Matematická analýza (prednáška)" },
+      { day: 3, start: 5, span: 2, type: "exercise", subject: "Matematická analýza (cvičenie)" },
+      // Friday
+      { day: 4, start: 1, span: 2, type: "lecture",  subject: "Webové technológie (prednáška)" },
+      { day: 4, start: 4, span: 1, type: "exercise", subject: "Algoritmy a DS (cvičenie)" },
+    ];
+
+    // Build grid: grid[slotIdx][dayIdx] = {type, subject, span, skip}
+    function buildGrid() {
+      const grid = [];
+      for (let s = 0; s < SLOTS.length; s++) {
+        grid[s] = [];
+        for (let d = 0; d < 5; d++) {
+          grid[s][d] = { type: "free", subject: "—", span: 1, skip: false };
+        }
+      }
+
+      SCHEDULE_DATA.forEach(entry => {
+        grid[entry.start][entry.day] = { type: entry.type, subject: entry.subject, span: entry.span, skip: false };
+        // Mark rows below as skip
+        for (let i = 1; i < entry.span; i++) {
+          if (entry.start + i < SLOTS.length) {
+            grid[entry.start + i][entry.day].skip = true;
+          }
+        }
+      });
+
+      return grid;
+    }
+
+    function renderTable(grid) {
+      const tbody = document.getElementById("schedule-body");
+      tbody.innerHTML = "";
+
+      for (let s = 0; s < SLOTS.length; s++) {
+        const tr = document.createElement("tr");
+        tr.setAttribute("data-slot", s);
+
+        // Time cell
+        const timeTd = document.createElement("th");
+        timeTd.className = "col-time";
+        timeTd.scope = "row";
+        timeTd.textContent = SLOTS[s];
+        tr.appendChild(timeTd);
+
+        for (let d = 0; d < 5; d++) {
+          const cell = grid[s][d];
+          if (cell.skip) continue;
+
+          const td = document.createElement("td");
+          td.setAttribute("data-type", cell.type);
+          td.setAttribute("data-day", d);
+          td.setAttribute("data-slot", s);
+          td.textContent = cell.subject;
+
+          if (cell.span > 1) {
+            td.rowSpan = cell.span;
+          }
+
+          tr.appendChild(td);
+        }
+
+        tbody.appendChild(tr);
+      }
+    }
+
+    // Highlight current lesson
+    function highlightCurrentLesson() {
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0=Sun,1=Mon...6=Sat
+      const dayIdx = dayOfWeek - 1;  // 0=Mon...4=Fri, -1=Sun, 5=Sat
+
+      const statusEl = document.getElementById("status-text");
+      const cells = document.querySelectorAll(".schedule-table td");
+      cells.forEach(c => c.classList.remove("cell--current"));
+
+      const hour = now.getHours();
+      const slotIdx = hour - 7; // 7:00=0, 8:00=1, ...
+
+      if (dayIdx < 0 || dayIdx > 4 || slotIdx < 0 || slotIdx >= SLOTS.length) {
+        // Weekend or outside hours
+        const nextInfo = findNextLesson(now, dayIdx, slotIdx);
+        statusEl.textContent = nextInfo;
+        return;
+      }
+
+      // Find if any lesson is ongoing
+      let foundLesson = null;
+      SCHEDULE_DATA.forEach(entry => {
+        if (entry.day === dayIdx && slotIdx >= entry.start && slotIdx < entry.start + entry.span) {
+          foundLesson = entry;
+        }
+      });
+
+      if (foundLesson) {
+        // Highlight all cells of this lesson
+        const allTds = document.querySelectorAll(`td[data-day="${dayIdx}"][data-slot="${foundLesson.start}"]`);
+        allTds.forEach(td => td.classList.add("cell--current"));
+        statusEl.textContent = `📚 Teraz prebieha: ${foundLesson.subject}`;
+      } else {
+        const nextInfo = findNextLesson(now, dayIdx, slotIdx);
+        statusEl.textContent = nextInfo;
+      }
+    }
+
+    function findNextLesson(now, currentDay, currentSlot) {
+      const days = ["pondelok", "utorok", "streda", "štvrtok", "piatok"];
+      let earliest = null;
+
+      SCHEDULE_DATA.forEach(entry => {
+        // Calculate minutes from now
+        let diffDays = entry.day - currentDay;
+        if (diffDays < 0 || (diffDays === 0 && entry.start <= currentSlot)) {
+          diffDays += 5; // wrap to next week
+        }
+        const totalMins = diffDays * 24 * 60 + (entry.start + 7) * 60 - (now.getHours() * 60 + now.getMinutes());
+
+        if (!earliest || totalMins < earliest.totalMins) {
+          earliest = { totalMins, entry };
+        }
+      });
+
+      if (!earliest) return "Momentálne nie je žiadna hodina v rozvrhu.";
+
+      const { entry } = earliest;
+      const dayName = days[entry.day];
+      const time = SLOTS[entry.start];
+      return `📭 Momentálne neprebieha výučba. Najbližšia hodina: ${entry.subject} — ${dayName} o ${time}`;
+    }
+
+    // Filter buttons
+    function initFilters() {
+      const buttons = document.querySelectorAll(".schedule-filters .btn");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const filter = btn.getAttribute("data-filter");
+
+          // Update button states
+          buttons.forEach(b => {
+            b.classList.remove("btn--active", "active");
+            b.setAttribute("aria-pressed", "false");
+          });
+          btn.classList.add("btn--active", "active");
+          btn.setAttribute("aria-pressed", "true");
+
+          applyFilter(filter);
+        });
+      });
+    }
+
+    function applyFilter(filter) {
+      const cells = document.querySelectorAll(".schedule-table td[data-type]");
+      const noResults = document.getElementById("no-results");
+      let visibleCount = 0;
+
+      cells.forEach(cell => {
+        const type = cell.getAttribute("data-type");
+        if (filter === "all" || type === filter) {
+          cell.classList.remove("cell--hidden");
+          if (type !== "free") visibleCount++;
+        } else {
+          cell.classList.add("cell--hidden");
+        }
+      });
+
+      // If filtering non-"all" and no real lessons visible
+      if (filter !== "all" && visibleCount === 0) {
+        noResults.classList.add("visible");
+      } else {
+        noResults.classList.remove("visible");
+      }
+    }
+
+    // Semester progress bar
+    function updateProgressBar() {
+      const now = Date.now();
+      const start = SEMESTER_START.getTime();
+      const end   = SEMESTER_END.getTime();
+
+      let pct = 0;
+      if (now <= start) pct = 0;
+      else if (now >= end) pct = 100;
+      else pct = Math.round(((now - start) / (end - start)) * 100);
+
+      document.getElementById("progress-bar-fill").style.width = pct + "%";
+      document.getElementById("progress-percent").textContent = pct + "%";
+      document.getElementById("progress-bar-wrapper").setAttribute("aria-valuenow", pct);
+    }
+
+    // Init
+    (function init() {
+      const grid = buildGrid();
+      renderTable(grid);
+      highlightCurrentLesson();
+      initFilters();
+      updateProgressBar();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mykola Todorov — Profil</title>
+  <meta name="description" content="Osobná webová vizitka Mykolu Todorova — študenta aplikovanej informatiky na FEI STU v Bratislave.">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mykola Todorov — Profil">
+  <meta property="og:description" content="Študent aplikovanej informatiky, zaujíma ma webový vývoj a programovanie.">
+  <meta property="og:image" content="img/me.jpg">
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* --- Profile-specific styles --- */
+    .profile-intro {
+      display: flow-root; /* clearfix for float */
+    }
+
+    .profile-photo {
+      float: left;
+      width: 200px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-right: var(--space-md);
+      margin-bottom: var(--space);
+      border: 3px solid var(--color-accent);
+    }
+
+    .key-skills {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .key-skills li {
+      background-color: var(--color-brand);
+      color: #fff;
+      padding: 4px var(--space);
+      border-radius: 20px;
+      font-size: var(--font-size-sm);
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+
+    .profile-motto {
+      border-left: 4px solid var(--color-brand);
+      padding: var(--space) var(--space-md);
+      background-color: var(--color-surface-alt);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-style: italic;
+      font-size: var(--font-size-lg);
+      color: var(--color-brand);
+    }
+
+    @media (max-width: 600px) {
+      .profile-photo {
+        float: none;
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip link -->
+  <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <a class="monogram" href="index.html" aria-label="Domov — MT monogram">MT</a>
+      <div class="header-info">
+        <a class="site-title" href="index.html">Mykola Todorov</a>
+        <p class="site-tagline">Študent informatiky, zaujíma ma webový vývoj a programovanie</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="site-nav" aria-label="Hlavná navigácia">
+    <div class="container">
+      <button class="nav__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Otvoriť menu">&#9776;</button>
+      <ul class="nav__list" id="main-nav">
+        <li><a class="nav__link nav__link--active" href="index.html" aria-current="page">Profil</a></li>
+        <li><a class="nav__link" href="pages/cv.html">Životopis</a></li>
+        <li><a class="nav__link" href="pages/workspace.html">Pracovné prostredie</a></li>
+        <li><a class="nav__link" href="pages/schedule.html">Rozvrh</a></li>
+        <li><a class="nav__link" href="pages/map.html">Mapa</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main-content">
+    <div class="container">
+
+      <h1>Ahoj, som Mykola Todorov</h1>
+
+      <section class="card" aria-label="Krátky profil">
+        <div class="profile-intro">
+          <img
+            class="profile-photo"
+            src="img/me.jpg"
+            alt="Mykola Todorov — portrétna fotografia"
+            width="200"
+            height="220"
+            loading="lazy"
+          >
+          <p>
+            Som študent tretieho ročníka <strong>Aplikovanej informatiky</strong> na Fakulte elektrotechniky
+            a informatiky STU v Bratislave. Zaujíma ma webový vývoj, backend programovanie a riešenie
+            algoritmických problémov. Rád pracujem na projektoch, kde môžem kombinovať logiku a kreativitu.
+          </p>
+          <p>
+            Momentálne sa zameriavam na zdokonaľovanie svojich zručností v oblasti
+            <strong>JavaScript/TypeScript</strong>, <strong>Python</strong> a <strong>C/C++</strong>.
+            Vo voľnom čase rád skúmam nové technológie a pracujem na vlastných projektoch.
+          </p>
+        </div>
+
+        <h2>Moje tri kľúčové zručnosti</h2>
+        <ul class="key-skills">
+          <li>⚡ JavaScript / TypeScript</li>
+          <li>🐍 Python</li>
+          <li>🔧 C / C++</li>
+          <li>🌐 HTML &amp; CSS</li>
+          <li>🗄️ Databázy (SQL)</li>
+          <li>🐧 Linux / Terminál</li>
+        </ul>
+
+        <h2>Predmety tohto semestra</h2>
+        <ul>
+          <li>Webové technológie (WEBTE)</li>
+          <li>Algoritmy a dátové štruktúry</li>
+          <li>Operačné systémy</li>
+          <li>Matematická analýza</li>
+          <li>Telesná a športová výchova</li>
+        </ul>
+      </section>
+
+      <!-- Aside with motto -->
+      <aside aria-label="Životné motto">
+        <blockquote class="card profile-motto">
+          „Kód je ako poézia — keď je dobre napísaný, číta sa sám."
+          <footer>— osobné motto</footer>
+        </blockquote>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <address>
+        <strong>Mykola Todorov</strong>
+        <a href="mailto:xtodorovm@stuba.sk">xtodorovm@stuba.sk</a>
+        <a href="tel:+421000000000">+421 XXX XXX XXX</a>
+      </address>
+      <div class="footer-sources">
+        <p>&copy; 2026 Mykola Todorov — FEI STU Bratislava</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

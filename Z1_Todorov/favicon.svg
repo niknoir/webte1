@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="32" fill="#3a5a40"/>
+  <!-- Monogram MT -->
+  <text
+    x="50%"
+    y="55%"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="system-ui, sans-serif"
+    font-size="24"
+    font-weight="700"
+    fill="#a3b18a"
+    letter-spacing="1"
+  >MT</text>
+</svg>

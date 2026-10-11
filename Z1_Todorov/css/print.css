@@ -1,0 +1,91 @@
+/* ============================================================
+   print.css — Print stylesheet for cv.html
+   Author: Mykola Todorov | FEI STU
+   ============================================================ */
+
+@media print {
+  /* Hide navigation, decorative elements */
+  .site-nav,
+  .skip-link,
+  .site-footer,
+  .btn {
+    display: none !important;
+  }
+
+  /* Reset backgrounds */
+  body,
+  .site-header,
+  .cv-layout,
+  .cv-sidebar,
+  .cv-main,
+  .card,
+  section,
+  aside {
+    background-color: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  /* Fit to one page */
+  html, body {
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* CV layout — two columns for print */
+  .cv-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 16pt;
+    border: none;
+  }
+
+  .cv-sidebar {
+    border-right: 1pt solid #ccc;
+    padding-right: 12pt;
+  }
+
+  /* No page breaks inside key sections */
+  .cv-sidebar,
+  .cv-main,
+  section {
+    page-break-inside: avoid;
+  }
+
+  /* Links — show URL */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #555;
+  }
+
+  a[href^="tel:"]::after,
+  a[href^="mailto:"]::after {
+    content: "";
+  }
+
+  /* Skill bars — print-friendly */
+  .skill-bar-fill {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 1.5cm 1.5cm 2cm;
+  }
+}
